@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gotd/td/telegram"
 	"github.com/tobycroft/Calc"
 	"main.go/config/app_conf"
 	"main.go/route"
@@ -21,6 +24,25 @@ func init() {
 }
 
 func main() {
+	// https://core.telegram.org/api/obtaining_api_id
+	client := telegram.NewClient(25409358, "e53ea5c1e8a0321d19e21421d92e0b90", telegram.Options{})
+	if err := client.Run(context.Background(), func(ctx context.Context) error {
+		// It is only valid to use client while this function is not returned
+		// and ctx is not cancelled.
+		api := client.API()
+		fmt.Println(api)
+		// Now you can invoke MTProto RPC requests by calling the API.
+		// ...
+
+		// Return to close client connection and free up resources.
+		return nil
+	}); err != nil {
+		panic(err)
+	}
+	// Client is closed.
+}
+
+func main2() {
 
 	Calc.RefreshBaseNum()
 	mainroute := gin.Default()
